@@ -1,5 +1,6 @@
 const {load} = require('cheerio');
 const {Feed} = require('feed');
+const {fetch} = require('cross-fetch');
 
 const URL = 'https://www.hobbycomps.co.uk/competitions/';
 
