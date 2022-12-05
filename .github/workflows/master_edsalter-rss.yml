@@ -41,4 +41,4 @@ jobs:
           app-name: 'edsalter-rss'
           slot-name: 'production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_e563d76e0e4f492f8f4668a976c58e60 }}
+          publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
