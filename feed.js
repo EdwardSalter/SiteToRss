@@ -56,7 +56,7 @@ async function generateFeed() {
   );
   link.endElement();
 
-  feed.writeElement("id", "HobbyComp");
+  feed.writeElement("id", "https://www.hobbycomp.co.uk");
 
   feed.writeElement("title", "HobbyComp Competitions");
 
@@ -70,11 +70,14 @@ async function generateFeed() {
   author.writeElement("uri", "https://www.hobbycomp.co.uk");
   author.endElement();
 
-  feed.writeElement("published", new Date().toISOString());
+  feed.writeElement(
+    "published",
+    new Date("2022-12-05T13:39:10.000Z").toISOString()
+  );
 
   products.forEach((p) => {
     const entry = feed.startElement("entry");
-    entry.writeElement("id", p.title);
+    entry.writeElement("id", p.link);
     entry.writeElement("title", p.title);
 
     const link = entry.startElement("link");
@@ -87,10 +90,8 @@ async function generateFeed() {
     entryAuthor.writeElement("uri", "https://www.hobbycomp.co.uk");
     entryAuthor.endElement();
 
-    entry.writeElement(
-      "published",
-      new Date("2022-12-05T13:39:10.000Z").toISOString()
-    );
+    entry.writeElement("published", new Date().toISOString());
+    entry.writeElement("updated", new Date().toISOString());
 
     const media = entry.startElement("media:group");
     media.writeElement("media:title", p.title);
