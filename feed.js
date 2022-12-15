@@ -115,7 +115,12 @@ async function generateFeed() {
   feed.endElement();
   doc.endDocument();
 
-  return format(xw.toString(), { parser: "html" });
+  return format(xw.toString(), {
+    parser: "xml",
+    bracketSameLine: true,
+    tabWidth: 4,
+    xmlWhitespaceSensitivity: "ignore",
+  });
 }
 
 module.exports = {
