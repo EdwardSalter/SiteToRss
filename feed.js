@@ -1,6 +1,7 @@
 const { load } = require("cheerio");
 const XMLWriter = require("xml-writer");
 const { fetch } = require("cross-fetch");
+const { format } = require("prettier");
 
 const URL = "https://www.hobbycomps.co.uk/competitions/";
 
@@ -70,10 +71,7 @@ async function generateFeed() {
   author.writeElement("uri", "https://www.hobbycomp.co.uk");
   author.endElement();
 
-  feed.writeElement(
-    "published",
-    new Date("2022-12-05T13:39:10.000Z").toISOString()
-  );
+  feed.writeElement("updated", new Date().toISOString());
 
   products.forEach((p) => {
     const entry = feed.startElement("entry");
@@ -117,25 +115,7 @@ async function generateFeed() {
   feed.endElement();
   doc.endDocument();
 
-  return xw.toString();
-
-  // const feed = new Feed({
-  //     title: 'HobbyComp Competitions',
-  //     description: 'Active competitions currently listed on HobbyComp.co.uk',
-  //     link: 'https://www.hobbycomp.co.uk',
-  //     id: 'https://www.hobbycomp.co.uk',
-  //     copyright: 'Hobby Comps 2022',
-  // });
-
-  // products.forEach((p) => {
-  //     feed.addItem({
-  //         ...p,
-  //         description: p.price,
-  //         content: p.image,
-  //     })
-  // })
-  //
-  // return feed.atom1();
+  return format(xw.toString(), { parser: "html" });
 }
 
 module.exports = {
