@@ -2,11 +2,20 @@ const XMLWriter = require("xml-writer");
 const { format } = require("prettier");
 
 /**
+ * @param {Date} date
+ * @returns {boolean}
+ */
+function isValidDate(date) {
+  return date instanceof Date && !isNaN(date);
+}
+
+/**
  * @typedef Entry
  * @property {string} title
  * @property {string} link
  * @property {string} [image]
  * @property {string} [description]
+ * @property {Date} [date]
  */
 
 /**
@@ -26,6 +35,10 @@ const { format } = require("prettier");
  * @returns {Promise<*>}
  */
 async function generateFeed(properties) {
+  if (!Array.isArray(properties.entries)) {
+    throw new Error("Entries must be an array");
+  }
+
   const xw = new XMLWriter();
   const doc = xw.startDocument();
   const feed = doc.startElement("feed");
@@ -51,11 +64,12 @@ async function generateFeed(properties) {
   author.writeElement("uri", properties.siteLink);
   author.endElement();
 
-  feed.writeElement("updated", new Date().toISOString());
-
-  if (!Array.isArray(properties.entries)) {
-    throw new Error("Entries must be an array");
+  let firstDate = properties.entries[0]?.date;
+  if (!firstDate || !isValidDate(firstDate)) {
+    firstDate = new Date();
   }
+  feed.writeElement("updated", firstDate.toISOString());
+
 
   properties.entries.forEach((e) => {
     const entry = feed.startElement("entry");
@@ -72,8 +86,9 @@ async function generateFeed(properties) {
     entryAuthor.writeElement("uri", properties.siteLink);
     entryAuthor.endElement();
 
-    entry.writeElement("published", new Date().toISOString());
-    entry.writeElement("updated", new Date().toISOString());
+    const date = e.date || new Date();
+    entry.writeElement("published", date.toISOString());
+    entry.writeElement("updated", date.toISOString());
 
     if (e.image || e.description) {
       const media = entry.startElement("media:group");
